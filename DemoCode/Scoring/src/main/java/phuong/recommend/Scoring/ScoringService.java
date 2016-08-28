@@ -46,7 +46,7 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
 	private static JavaRDD<String> rules;
 	
 	//Param
-	private static String rule_path ="E:\\Study\\Cao Hoc\\luan an\\recommendation news\\Scoring\\rule.txt";
+	private static String rule_path ="E:\\Study\\Cao Hoc\\luan an\\recommendation news\\RecommendationSystem\\DemoCode\\Scoring\\rule.txt";
 	
 	
 	
@@ -106,12 +106,9 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
 	
 	
 	
-	public String Scoring(String currentArticles)
+	public String Scoring(final String[] input)
 	{		
-		final String[] input = reprocessInput(currentArticles);
-		rules = sc.textFile(rule_path);
-		
-		
+			
 		PairFunction<String, String, String> f = new PairFunction<String, String, String>(){
 
 			public Tuple2<String, String> call(String arg0) throws Exception {
@@ -183,29 +180,24 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
 	public String Recommend(String currentArticles) throws RemoteException 
 	{
 		String result="";
-		
-		
-		
 		//Convert currentArticles to array
-		String[] currentArt=null;
-		
 		//Sort and remove duplicate article in currentArt
-		
-		
+		String[] currentArt=reprocessInput(currentArticles);
 		// Check if currentArt in cache "queryCache"
+		if(queryCache.containsKey(currentArt)){
+			// IF IN CACHE => result = queryCache.get(...)
+			result=queryCache.get(currentArt);			
+		}
+		else
 		
-		// IF IN CACHE => result = queryCache.get(...)
-		
-		//IF NOT IN CACHE => Call scoring function to get new value
-		
-		result= Scoring(currentArticles);
-		
+		{
+		//IF NOT IN CACHE => Call scoring function to get new value	
+		result= Scoring(currentArt);
 		// Cache the result
 		// Ex: queryCache.put(currentArt,result)
-		
-		
-		return result;
-		
+		queryCache.put(currentArt, result);
+		}
+		return result;		
 
 	}
 
@@ -218,7 +210,7 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
 
 	public void cleanCache() throws RemoteException {
 		// TODO Auto-generated method stub
-		
+		queryCache.clear();
 	}
 
 
@@ -227,8 +219,7 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
 		//Refesh rules RDD
 		rules.unpersist();
 		rules = sc.textFile(rule_path);
-		rules.cache();
-		
+		rules.cache();		
 		cleanCache();
 		return 0;
 	}
