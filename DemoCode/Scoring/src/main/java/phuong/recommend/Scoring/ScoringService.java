@@ -2,6 +2,7 @@ package phuong.recommend.Scoring;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
@@ -67,7 +68,7 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
      	conf = new SparkConf().setMaster("local").setAppName("Scoring");
      	sc = new JavaSparkContext(conf);
      	queryCache = new HashMap();
-        
+     	
      	
      	
         
@@ -75,9 +76,8 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
         try 
         {
 			LocateRegistry.createRegistry(1099);
-			
-			System.out.println("java RMI registry created.");
 			ScoringService svrObj = new ScoringService();
+			System.out.println("java RMI registry created.");			
 			Naming.rebind(SERVER_URL, svrObj);
 			
 			System.out.println("RMI Interface was started");
@@ -204,7 +204,7 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
 
 	public int getCacheSize() throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return queryCache.size();
 	}
 
 
@@ -228,5 +228,14 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
 	public void stopScoringService() throws RemoteException {
 		// TODO Auto-generated method stub
 		
+		try {
+			Naming.unbind(SERVER_URL);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
