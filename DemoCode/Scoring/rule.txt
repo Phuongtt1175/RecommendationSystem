@@ -1,0 +1,34 @@
+[8]| [article]| 1.0| 20160819
+[8]| [using]| 1.0| 20160819
+[8]| [sample]| 1.0| 20160819
+[article]| [using]| 1.0| 20160819
+[article]| [8]| 1.0| 20160819
+[article]| [sample]| 1.0| 20160819
+[8, sample]| [article]| 1.0| 20160819
+[8, sample]| [using]| 1.0| 20160819
+[8, using]| [article]| 1.0| 20160819
+[8, using]| [sample]| 1.0| 20160819
+[article, using]| [8]| 1.0| 20160819
+[article, using]| [sample]| 1.0| 20160819
+[8, article, using]| [sample]| 1.0| 20160819
+[sample, using]| [8]| 1.0| 20160819
+[sample, using]| [article]| 1.0| 20160819
+[sample]| [8]| 1.0| 20160819
+[sample]| [article]| 1.0| 20160819
+[sample]| [using]| 1.0| 20160819
+[using]| [article]| 1.0| 20160819
+[using]| [8]| 1.0| 20160819
+[using]| [sample]| 1.0| 20160819
+[article, sample, using]| [8]| 1.0| 20160819
+[article, sample]| [8]| 1.0| 20160819
+[article, sample]| [using]| 1.0| 20160819
+[8, sample, using]| [article]| 1.0| 20160819
+[8, article]| [using]| 1.0| 20160819
+[8, article]| [sample]| 1.0| 20160819
+[8, article, sample]| [using]| 1.0| 20160819
+[a]| [b]| 0.9| 20160820
+[a, c]| [b]| 0.8| 20160819
+[81]| [b]| 1.0| 20160819
+[b, c]| [a]| 0.9| 20160819
+[b]| [a]| 0.8| 20160819
+[d]| [c]| 0.88| 20160819

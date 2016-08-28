@@ -28,7 +28,7 @@ public class streamtext {
     public static void main(String[] args) throws Exception 
     {
         // TODO code application logic here
-        int port=9090;
+        int port=9099;
         int numOfMessage = 100;
         
         if(args.length>0)
@@ -74,7 +74,7 @@ public class streamtext {
                   
                     //StreamOut.printTime(out, numOfMessage);
                     
-                    StreamOut.printTextFile(out, "D:\\WS\\JWS\\Para.txt", 1, 100);
+                    StreamOut.printTextFile(out, "D:\\WS\\Para.txt", 1, 100);
                     
                     out.println("MESSAGES DONE! GOODBYE!");
                     
