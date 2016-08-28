@@ -1,6 +1,8 @@
 package phuong.recommend.Scoring;
 
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -61,7 +63,7 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
 	//********************************************************
 	//					MAIN
 	//********************************************************
-	public static void main( String[] args ) throws RemoteException
+	public static void main( String[] args ) throws RemoteException, UnknownHostException
     {
         System.out.println( "Hello World!" );
         
@@ -83,9 +85,12 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
         //				RMI Regitry Scoring
        
      	// Get current IP of host 
+     	
      	String locaIP="";
+     	InetAddress IP=InetAddress.getLocalHost();
+     	locaIP = IP.getHostAddress();
      	// set SERVER_URL = //<ip>/RMI_NAME
-     	SERVER_URL=""+RMI_NAME;
+     	SERVER_URL="//"+locaIP+"/"+RMI_NAME;
      	
      	
      	try 

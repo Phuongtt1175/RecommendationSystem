@@ -7,8 +7,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
@@ -34,6 +37,8 @@ import org.apache.spark.mllib.fpm.AssociationRules;
 import org.apache.spark.mllib.fpm.FPGrowth;
 import org.apache.spark.mllib.fpm.FPGrowthModel;
 
+import phuong.recommend.RecomendCentralManager.ICMSComponent;
+import phuong.recommend.Scoring.ScoringService;
 import scala.Tuple2;
 
 /**
@@ -50,8 +55,13 @@ public class ModelBuilderService extends UnicastRemoteObject implements IModelBu
     //MODEL
     private static String CURRENT_MODEL="hdfs://master:8020/associtaionRule/20160202/";
     
+    //Parent
+    private static String CMS_URL ="//localhost/CMS";
+    private static ICMSComponent CMSobj=null;
     
-    //RMI
+    
+    //RMICMS_URL
+    private static String RMI_NAME= "ModelServices";
     private static String SERVER_URL="//localhost/ModelService";
     
     
@@ -93,28 +103,52 @@ public class ModelBuilderService extends UnicastRemoteObject implements IModelBu
     //********************************************************
   	//					MAIN
   	//********************************************************
-	public static void main( String[] args )
+	public static void main( String[] args ) throws UnknownHostException, RemoteException
     {
         System.out.println( "Hello World!" );
-        conf = new SparkConf().setMaster("local").setAppName("Scoring");
+        conf = new SparkConf().setMaster("local").setAppName("ModelBuilder");
      	sc = new JavaSparkContext(conf);
      	
      	
-     	//RMI Regitry
-        try 
+     	//***************************************************
+        //				RMI Regitry Scoring
+       
+     	// Get current IP of host 
+     	
+     	String locaIP="";
+     	InetAddress IP=InetAddress.getLocalHost();
+     	locaIP = IP.getHostAddress();
+     	// set SERVER_URL = //<ip>/RMI_NAME
+     	SERVER_URL="//"+locaIP+"/"+RMI_NAME;
+     	
+     	
+     	try 
         {
 			LocateRegistry.createRegistry(1099);
-			
-			System.out.println("java RMI registry created.");
 			ModelBuilderService svrObj = new ModelBuilderService();
+			System.out.println("java RMI registry created.");			
 			Naming.rebind(SERVER_URL, svrObj);
-			
 			
 			System.out.println("RMI Interface was started");
 			
 		} 
         catch (RemoteException e) 			{e.printStackTrace();}
         catch (MalformedURLException e)    	{e.printStackTrace();}
+        
+        
+        //******************************************************
+        //				Registry with CMS
+        try 
+        {
+			CMSobj = (ICMSComponent)Naming.lookup(CMS_URL);
+		} 
+        catch (MalformedURLException e) {e.printStackTrace();} 
+        catch (RemoteException e) {e.printStackTrace();} 
+        catch (NotBoundException e) {e.printStackTrace();}
+        
+        
+        CMSobj.registryScoring(SERVER_URL);
+        
     }
 	
 	
