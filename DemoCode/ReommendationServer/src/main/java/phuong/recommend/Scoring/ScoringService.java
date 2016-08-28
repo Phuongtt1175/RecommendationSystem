@@ -19,6 +19,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.PairFunction;
 
+import phuong.recommend.RecomendCentralManager.ICMSComponent;
 import scala.Tuple2;
 
 
@@ -30,9 +31,12 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
     
     
     //Parent
+    private static String CMS_URL ="//localhost/CMS";
+    private static ICMSComponent CMSobj=null;
     
     
-    //RMI
+    //RMICMS_URL
+    private static String RMI_NAME= "ScoringServices";
     private static String SERVER_URL="//localhost/ScoringServices";
     
     
@@ -57,10 +61,11 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
 	//********************************************************
 	//					MAIN
 	//********************************************************
-	public static void main( String[] args )
+	public static void main( String[] args ) throws RemoteException
     {
         System.out.println( "Hello World!" );
         
+        //***************************************************
         // Config Spark
 
      	//System.setProperty("hadoop.home.dir", "D:\\WS\\Lib");
@@ -70,10 +75,20 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
      	queryCache = new HashMap();
      	
      	
+     	    	
      	
-        
-        //RMI Regitry
-        try 
+     	
+     	
+     	//***************************************************
+        //				RMI Regitry Scoring
+       
+     	// Get current IP of host 
+     	String locaIP="";
+     	// set SERVER_URL = //<ip>/RMI_NAME
+     	SERVER_URL=""+RMI_NAME;
+     	
+     	
+     	try 
         {
 			LocateRegistry.createRegistry(1099);
 			ScoringService svrObj = new ScoringService();
@@ -87,6 +102,18 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
         catch (MalformedURLException e)    	{e.printStackTrace();}
         
         
+        //******************************************************
+        //				Registry with CMS
+        try 
+        {
+			CMSobj = (ICMSComponent)Naming.lookup(CMS_URL);
+		} 
+        catch (MalformedURLException e) {e.printStackTrace();} 
+        catch (RemoteException e) {e.printStackTrace();} 
+        catch (NotBoundException e) {e.printStackTrace();}
+        
+        
+        CMSobj.registryScoring(SERVER_URL);
         
         
     }
