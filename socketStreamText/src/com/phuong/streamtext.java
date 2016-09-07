@@ -74,7 +74,8 @@ public class streamtext {
                   
                     //StreamOut.printTime(out, numOfMessage);
                     
-                    StreamOut.printTextFile(out, "D:\\WS\\Para.txt", 1, 100);
+                    //StreamOut.printTextFile(out, "D:\\WS\\Para.txt", 10, 1);
+                    StreamOut.printTextFile(out, "D:\\WS\\local-access_log.1453971674526", 100, 0);
                     
                     out.println("MESSAGES DONE! GOODBYE!");
                     
