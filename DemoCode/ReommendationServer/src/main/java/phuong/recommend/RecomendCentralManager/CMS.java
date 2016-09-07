@@ -3,6 +3,7 @@ package phuong.recommend.RecomendCentralManager;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -45,6 +46,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 	static String ModelBuilderJar="";
 	static String ModelBuilderMainClass="";
 	static IModelBuilderAPI modelBuilder;
+	static String MODEL_PATH="";
 	
 	//Scoring
 	static String RMI_URL_Scoring ="";
@@ -148,6 +150,8 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 	public void startScoringService() throws RemoteException 
 	{
+		
+		//Start
 		try 
 		{
 			SparkAppHandle handle = new SparkLauncher()
@@ -206,13 +210,35 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 	public boolean registryModelBuilder(String RMI_URL) throws RemoteException 
 	{
 		RMI_URL_ModelBuilder=RMI_URL;
+		try 
+		{
+			modelBuilder= (IModelBuilderAPI) Naming.lookup(RMI_URL_ModelBuilder);
+		} 
+		catch (MalformedURLException e) 
+		{
+			e.printStackTrace();
+			return false;
+		} catch (NotBoundException e) 
+		{
+			e.printStackTrace();
+			return false;
+		}
+		
 		return true;
 	}
 
 
 
-	public void updateNewModel(String modelpath, String modelID) throws RemoteException {
-		// TODO Auto-generated method stub
+	public void updateNewModel(String modelpath, String modelID) throws RemoteException 
+	{
+		MODEL_PATH=modelpath;
+		
+		//Check if socring service is null
+		if(scoringObj==null)
+			return;
+		
+		scoringObj.refeshModel(MODEL_PATH);
+			
 		
 	}
 
@@ -225,9 +251,27 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 
 
-	public boolean registryScoring(String RMI_URL) throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean registryScoring(String RMI_URL) throws RemoteException 
+	{
+		RMI_URL_Scoring=RMI_URL;
+		try 
+		{
+			scoringObj= (ISocringControl) Naming.lookup(RMI_URL_Scoring);
+		} 
+		catch (MalformedURLException e) 
+		{
+			e.printStackTrace();
+			return false;
+		} catch (NotBoundException e) 
+		{
+			e.printStackTrace();
+			return false;
+		}
+		
+		scoringObj.refeshModel(MODEL_PATH);
+		
+		
+		return true;
 	}
 
 
@@ -274,8 +318,13 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 
 
-	public int getNumberOfCacheHitCurrentModel() throws RemoteException {
-		// TODO Auto-generated method stub
+	public int getNumberOfCacheHitCurrentModel() throws RemoteException 
+	{
+		int rs=0;
+
+		if(scoringObj!=null)
+			rs=1;
+		
 		return 0;
 	}
 

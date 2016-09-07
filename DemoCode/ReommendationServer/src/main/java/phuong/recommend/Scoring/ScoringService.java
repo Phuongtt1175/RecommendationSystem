@@ -234,14 +234,14 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
 	}
 
 
-	public int getCacheSize() throws RemoteException {
-		// TODO Auto-generated method stub
+	public int getCacheSize() throws RemoteException 
+	{
 		return queryCache.size();
 	}
 
 
-	public void cleanCache() throws RemoteException {
-		// TODO Auto-generated method stub
+	public void cleanCache() throws RemoteException 
+	{
 		queryCache.clear();
 	}
 
