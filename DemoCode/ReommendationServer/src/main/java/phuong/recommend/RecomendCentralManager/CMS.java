@@ -11,6 +11,10 @@ import java.rmi.server.UnicastRemoteObject;
 import org.apache.spark.launcher.SparkAppHandle;
 import org.apache.spark.launcher.SparkLauncher;
 
+import phuong.recommend.ModelBuilder.IModelBuilderAPI;
+import phuong.recommend.Scoring.IScoringAPI;
+import phuong.recommend.Scoring.ISocringControl;
+
 /**
  * Hello world!
  *
@@ -40,12 +44,13 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 	static String RMI_URL_ModelBuilder="//192.168.11.107/ModelService";
 	static String ModelBuilderJar="";
 	static String ModelBuilderMainClass="";
-	//static IModelBuilderAPI modelBuilder = (IModelBuilderAPI)Naming.lookup(RMI_URL_ModelBuilder);
+	static IModelBuilderAPI modelBuilder;
 	
 	//Scoring
 	static String RMI_URL_Scoring ="";
 	static String scoringJar="";
 	static String scoringMainClass="";
+	static ISocringControl scoringObj;
 	
 	//Log streaming
 	static String RMI_URL_DataStream="";
@@ -174,7 +179,6 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 	public void stopModelBuilder() throws RemoteException 
 	{
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -184,8 +188,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 	public void stopScoringService() throws RemoteException 
 	{
-		// TODO Auto-generated method stub
-		
+		scoringObj.stopScoringService();
 	}
 
 
@@ -226,4 +229,56 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+
+
+	public int getDataStreamingStatus() throws RemoteException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	public int getModelBuilderStatus() throws RemoteException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	public int getScoringServiceStatus() throws RemoteException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	public int getNumberOfQuery() throws RemoteException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	public int getNumberOfQueryCurrentModel() throws RemoteException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	public int getNumberOfCacheHit() throws RemoteException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	public int getNumberOfCacheHitCurrentModel() throws RemoteException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
 }
