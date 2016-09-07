@@ -248,6 +248,7 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
 
 	public int refeshModel(String ModelPath) throws RemoteException 
 	{
+		rule_path=ModelPath;
 		//Refesh rules RDD
 		rules.unpersist();
 		rules = sc.textFile(rule_path);
