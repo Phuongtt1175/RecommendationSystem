@@ -6,4 +6,5 @@ import java.rmi.RemoteException;
 public interface ILauncherServer extends Remote 
 {
 	public String ping(String s) throws RemoteException;
+	public void sendMess(String s) throws RemoteException;
 }

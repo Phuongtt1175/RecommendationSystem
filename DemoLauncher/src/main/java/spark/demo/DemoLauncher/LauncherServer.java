@@ -38,5 +38,10 @@ public class LauncherServer implements ILauncherServer {
         Naming.rebind("//"+LOCAL_IP+"/"+RMIName, lcsoj);
 
 	}
+
+	public void sendMess(String s) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

@@ -17,7 +17,7 @@ public class SparkApp {
 
 	
 	static String FILE_PATH ="hdfs://hadoop01:8020/samples/input/pg1661.txt";
-	static String SERVER_URL="//localhost/LS";
+	static String SERVER_URL="//localhost/LaucherServer";
 	public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException 
 	{
 		System.out.println("Hello");
@@ -47,11 +47,11 @@ public class SparkApp {
 	    System.out.println("RDD2: "+ data2Count);
 	    
 	    
-	    srv.ping("RDD1: "+ dataCount);
-	    srv.ping("RDD2: "+ data2Count);
+	    srv.sendMess("RDD1: "+ dataCount);
+	    srv.sendMess("RDD2: "+ data2Count);
 	    
 	    
-	    srv.ping("SPARK APP IS STOPING...");
+	    srv.sendMess("SPARK APP IS STOPING...");
 
 	}
 
