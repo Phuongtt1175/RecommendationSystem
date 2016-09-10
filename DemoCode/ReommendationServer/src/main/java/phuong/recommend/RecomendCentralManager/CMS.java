@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -17,6 +18,7 @@ import org.apache.spark.launcher.SparkAppHandle;
 import org.apache.spark.launcher.SparkLauncher;
 
 import phuong.recommend.ModelBuilder.IModelBuilderAPI;
+import phuong.recommend.Scoring.IScoringAPI;
 import phuong.recommend.Scoring.ISocringControl;
 
 /**
@@ -58,6 +60,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 	static String scoringJar="";
 	static String scoringMainClass="";
 	static ISocringControl scoringObj;
+	static IScoringAPI scoreAPI;
 	
 	//Log streaming
 	static String RMI_URL_DataStream="";
@@ -338,6 +341,35 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 			rs=1;
 		
 		return 0;
+	}
+
+
+
+	public String Recommend(String currentArticle) throws RemoteException 
+	{
+		
+		String rs;
+		if(scoreAPI==null)
+		{
+		
+			try 
+			{
+				scoreAPI = (IScoringAPI) Naming.lookup(RMI_URL_Scoring);
+			} 
+			catch (MalformedURLException e) 
+			{	
+				return "";
+			} 
+			catch (NotBoundException e) 
+			{		
+				return "";
+			}
+		}
+		
+		
+		rs = scoreAPI.Recommend(currentArticle);
+		
+		return rs;
 	}
 
 

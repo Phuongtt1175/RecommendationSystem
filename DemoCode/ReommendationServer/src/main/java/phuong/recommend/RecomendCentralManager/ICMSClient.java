@@ -20,7 +20,8 @@ public interface ICMSClient extends Remote
 	//Check component status
 	//  Status ID	Name
 	//	1			Stopped
-	//	2			Running
+	//	2			Not Responding
+	//  3			Running
 	public int getDataStreamingStatus() throws RemoteException;
 	public int getModelBuilderStatus() throws RemoteException;
 	public int getScoringServiceStatus() throws RemoteException;
@@ -36,7 +37,8 @@ public interface ICMSClient extends Remote
 	
 	
 	
-	
+	//For webserver
+	public String Recommend(String currentArticle) throws RemoteException;
 	
 	
 }
