@@ -150,6 +150,10 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 		cm.add("phuong.recommend.ModelBuilder.ModelBuilderService");
 		cm.add("--master");
 		cm.add(SPARK_MASTER);
+		cm.add("--executor-memory");
+		cm.add("1G");
+		cm.add("--total-executor-cores");
+		cm.add("2");
 		cm.add(SPARK_APP_JAR);
 		cm.add(CMS_URL);
 				
@@ -174,6 +178,10 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 		cm.add("phuong.recommend.Scoring.ScoringService");
 		cm.add("--master");
 		cm.add(SPARK_MASTER);
+		cm.add("--executor-memory");
+		cm.add("1G");
+		cm.add("--total-executor-cores");
+		cm.add("2");
 		cm.add(SPARK_APP_JAR);
 		cm.add(CMS_URL);
 		
