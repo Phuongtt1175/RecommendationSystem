@@ -1,5 +1,10 @@
 package phuong.recommend.RecomendCentralManager;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -8,6 +13,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import phuong.recommend.Scoring.IScoringAPI;
 
 public class GUI {
 	protected Shell shell;
@@ -75,16 +82,31 @@ public class GUI {
 		btnStartModel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(modelStart){
-					label.setText("Starting");
-					btnStartModel.setText("Stop");					
-					modelStart=false;
-				}else
-				{
-					label.setText("Stopping");				
-					btnStartModel.setText("Start");
-					modelStart=true;
+				try {
+					ICMSClient cmsClient = (ICMSClient) Naming.lookup("//"+text.getText()+"/"+text_1.getText());
+					if(modelStart){
+						label.setText("Starting");
+						btnStartModel.setText("Stop");					
+						modelStart=false;
+						cmsClient.startModelBuilder();
+					}else
+					{
+						label.setText("Stopping");				
+						btnStartModel.setText("Start");
+						modelStart=true;
+						cmsClient.stopModelBuilder();
+					}
+				} catch (MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
+				
 			}
 		});
 		btnStartModel.setBounds(236, 71, 75, 25);
@@ -102,16 +124,31 @@ public class GUI {
 		btnStartScoring.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(scoringStart){
-					lblStarting.setText("Starting");
-					btnStartScoring.setText("Stop");					
-					scoringStart=false;
-				}else
-				{
-					lblStarting.setText("Stopping");				
-					btnStartScoring.setText("Start");
-					scoringStart=true;
+				try {
+					ICMSClient cmsClient = (ICMSClient) Naming.lookup("//"+text.getText()+"/"+text_1.getText());
+					if(scoringStart){
+						lblStarting.setText("Starting");
+						btnStartScoring.setText("Stop");					
+						scoringStart=false;
+						cmsClient.startScoringService();
+					}else
+					{
+						lblStarting.setText("Stopping");				
+						btnStartScoring.setText("Start");
+						scoringStart=true;
+						cmsClient.stopScoringService();
+					}
+				} catch (MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
+				
 			}
 		});
 		btnStartScoring.setText("Start");
@@ -121,24 +158,38 @@ public class GUI {
 		btnStartCMS.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(scoringStart){
-					label.setText("Starting");
-					lblStarting.setText("Starting");
-					btnStartCMS.setText("Stop");
-					btnStartModel.setText("Stop");
-					btnStartScoring.setText("Stop");
-					scoringStart=false;
-					modelStart=false;
-				}else
-				{
-					lblStarting.setText("Stopping");				
-					label.setText("Stopping");
-					btnStartCMS.setText("Start");
-					btnStartScoring.setText("Start");
-					btnStartModel.setText("Start");
-					scoringStart=true;
-					modelStart=true;
-				}
+									try {
+					ICMSClient cmsClient = (ICMSClient) Naming.lookup("//"+text.getText()+"/"+text_1.getText());
+					if(scoringStart){
+						label.setText("Starting");
+						lblStarting.setText("Starting");
+						btnStartCMS.setText("Stop");
+						btnStartModel.setText("Stop");
+						btnStartScoring.setText("Stop");
+						scoringStart=false;
+						modelStart=false;
+					}else
+					{
+						lblStarting.setText("Stopping");				
+						label.setText("Stopping");
+						btnStartCMS.setText("Start");
+						btnStartScoring.setText("Start");
+						btnStartModel.setText("Start");
+						scoringStart=true;
+						modelStart=true;
+						cmsClient.stopAll();
+					}
+					} catch (MalformedURLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (NotBoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				
 			}
 		});
 		btnStartCMS.setBounds(335, 27, 75, 25);
