@@ -26,7 +26,7 @@ public class MainApp  extends UnicastRemoteObject implements ILauncherServer
     static Registry RMIRegistry;
 	static String RMIName="LaucherServer";
 	static String LOCAL_IP="localhost";
-	static LauncherServer lcsoj;
+	static MainApp lcsoj;
 	
 	
 	public static void main( String[] args ) throws RemoteException, MalformedURLException
@@ -49,7 +49,7 @@ public class MainApp  extends UnicastRemoteObject implements ILauncherServer
         	System.out.println("Using current RMI Registry at port 1099");
         }
         
-        lcsoj = new LauncherServer();
+        lcsoj = new MainApp();
         Naming.rebind("//"+LOCAL_IP+"/"+RMIName, lcsoj);
 		
 		

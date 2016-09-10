@@ -54,7 +54,7 @@
 	          <manifest>
 	            <addClasspath>true</addClasspath>
 	            <classpathPrefix>lib/</classpathPrefix>
-	            <mainClass>cspark.demo.DemoLauncher.MainApp</mainClass>
+	            <mainClass>spark.demo.DemoLauncher.MainApp</mainClass>
 	          </manifest>
 	        </archive>
 	        <descriptorRefs>
