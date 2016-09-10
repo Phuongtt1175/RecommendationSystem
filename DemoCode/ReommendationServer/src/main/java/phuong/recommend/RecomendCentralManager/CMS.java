@@ -153,9 +153,9 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 				
 		boolean rs = Lib.startSparkApp(cm);
 		if(rs)
-			System.out.println("ScoringService was started!");
+			System.out.println("ModelBuilder was started!");
 		else
-			System.out.println("Cannot Start Scoring Service!");
+			System.out.println("Cannot Start Modelbuilder Service!");
 		
 	}
 
@@ -298,16 +298,40 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 
 
-	public int getModelBuilderStatus() throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getModelBuilderStatus() throws RemoteException 
+	{
+		if(modelBuilder==null)
+			return 1;
+
+		try
+		{
+			String txt = modelBuilder.checkConnection();
+		}
+		catch(RemoteException ex)
+		{
+			return 2;
+		}
+		
+		return 3;
 	}
 
 
 
-	public int getScoringServiceStatus() throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getScoringServiceStatus() throws RemoteException 
+	{
+		if(scoringObj==null)
+			return 1;
+
+		try
+		{
+			String txt = scoringObj.checkConnection();
+		}
+		catch(RemoteException ex)
+		{
+			return 2;
+		}
+		
+		return 3;
 	}
 
 
@@ -370,6 +394,27 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 		rs = scoreAPI.Recommend(currentArticle);
 		
 		return rs;
+	}
+
+
+
+	public String getScoringURL() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	public String getModelBuilderURL() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	public String getStreamingURL() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

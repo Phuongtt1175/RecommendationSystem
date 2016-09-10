@@ -15,5 +15,6 @@ public interface ISocringControl extends Remote
 	
 	//Control
 	public void stopScoringService() throws RemoteException;
+	public String checkConnection() throws RemoteException;
 	
 }

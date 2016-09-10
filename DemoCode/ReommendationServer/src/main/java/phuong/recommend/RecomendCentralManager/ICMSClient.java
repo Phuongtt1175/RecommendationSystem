@@ -26,6 +26,10 @@ public interface ICMSClient extends Remote
 	public int getModelBuilderStatus() throws RemoteException;
 	public int getScoringServiceStatus() throws RemoteException;
 	
+	//Get component info
+	public String getScoringURL() throws RemoteException;
+	public String getModelBuilderURL() throws RemoteException;
+	public String getStreamingURL() throws RemoteException;
 	
 	
 	
