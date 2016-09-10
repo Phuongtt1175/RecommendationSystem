@@ -22,6 +22,8 @@ public class GUI {
 	private Text text_1;
 	private boolean modelStart = false;
 	private boolean scoringStart = false;
+	private boolean cmsConnect = false;
+	static ICMSClient cmsClient;
 
 	/**
 	 * Launch the application.
@@ -56,7 +58,7 @@ public class GUI {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(450, 300);
+		shell.setSize(550, 300);
 		shell.setText("SWT Application");
 		
 		Label lblCmsServer = new Label(shell, SWT.NONE);
@@ -78,39 +80,7 @@ public class GUI {
 		final Label label = new Label(shell, SWT.NONE);
 		label.setText("Starting");
 		label.setBounds(133, 76, 55, 15);
-		final Button btnStartModel = new Button(shell, SWT.NONE);
-		btnStartModel.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				try {
-					ICMSClient cmsClient = (ICMSClient) Naming.lookup("//"+text.getText()+"/"+text_1.getText());
-					if(modelStart){
-						label.setText("Starting");
-						btnStartModel.setText("Stop");					
-						modelStart=false;
-						cmsClient.startModelBuilder();
-					}else
-					{
-						label.setText("Stopping");				
-						btnStartModel.setText("Start");
-						modelStart=true;
-						cmsClient.stopModelBuilder();
-					}
-				} catch (MalformedURLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (NotBoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				
-			}
-		});
-		btnStartModel.setBounds(236, 71, 75, 25);
-		btnStartModel.setText("Start");
 		
 		Label lblModelBuilder = new Label(shell, SWT.NONE);
 		lblModelBuilder.setBounds(44, 76, 83, 15);
@@ -120,64 +90,110 @@ public class GUI {
 		lblScoring.setBounds(44, 117, 55, 15);
 		lblScoring.setText("Scoring:");
 		
-		final Button btnStartScoring = new Button(shell, SWT.NONE);
-		btnStartScoring.addSelectionListener(new SelectionAdapter() {
+		final Label lblModelBuilderURL = new Label(shell, SWT.NONE);
+		lblModelBuilderURL.setBounds(320, 76, 150, 15);
+		lblModelBuilderURL.setText("");
+		
+		
+		final Label lblScoringURL = new Label(shell, SWT.NONE);
+		lblScoringURL.setBounds(320, 110, 150, 15);
+		lblScoringURL.setText("");
+		
+		final Button btnStartModel = new Button(shell, SWT.NONE);
+		btnStartModel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					ICMSClient cmsClient = (ICMSClient) Naming.lookup("//"+text.getText()+"/"+text_1.getText());
-					if(scoringStart){
-						lblStarting.setText("Starting");
-						btnStartScoring.setText("Stop");					
-						scoringStart=false;
-						cmsClient.startScoringService();
+				try {					
+					if(cmsClient.getModelBuilderStatus()==3){
+						label.setText("Starting");
+						btnStartModel.setText("Stop");					
+						//modelStart=false;
+						cmsClient.startModelBuilder();
+						lblModelBuilderURL.setText(cmsClient.getModelBuilderURL());
 					}else
 					{
-						lblStarting.setText("Stopping");				
-						btnStartScoring.setText("Start");
-						scoringStart=true;
-						cmsClient.stopScoringService();
+						label.setText("Stopping");				
+						btnStartModel.setText("Start");
+						//modelStart=true;
+						cmsClient.stopModelBuilder();
+						lblModelBuilderURL.setText("");
 					}
-				} catch (MalformedURLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (NotBoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
 			}
 		});
+		btnStartModel.setBounds(236, 71, 75, 25);
+		btnStartModel.setText("Start");
+
+		final Button btnStartScoring = new Button(shell, SWT.NONE);
+		btnStartScoring.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {					
+					if(cmsClient.getScoringServiceStatus()==3){
+						lblStarting.setText("Starting");
+						btnStartScoring.setText("Stop");					
+						//scoringStart=false;
+						cmsClient.startScoringService();
+						lblScoringURL.setText(cmsClient.getScoringURL());
+					}else
+					{
+						lblStarting.setText("Stopping");				
+						btnStartScoring.setText("Start");
+						//scoringStart=true;
+						lblScoringURL.setText("");
+						cmsClient.stopScoringService();
+					}
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} 				
+			}
+		});
 		btnStartScoring.setText("Start");
 		btnStartScoring.setBounds(236, 107, 75, 25);
-		
+		btnStartModel.setVisible(false);
+		btnStartScoring.setVisible(false);
 		final Button btnStartCMS = new Button(shell, SWT.NONE);
 		btnStartCMS.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 									try {
 					ICMSClient cmsClient = (ICMSClient) Naming.lookup("//"+text.getText()+"/"+text_1.getText());
-					if(scoringStart){
+					
+				if(cmsConnect){
+
+					cmsConnect=false;
+				}else
+				{
+
+					cmsConnect=true;
+				}
+					if(cmsConnect){
+						btnStartModel.setVisible(true);
+						btnStartScoring.setVisible(true);
 						label.setText("Starting");
 						lblStarting.setText("Starting");
-						btnStartCMS.setText("Stop");
+						btnStartCMS.setText("Disconnect");
 						btnStartModel.setText("Stop");
 						btnStartScoring.setText("Stop");
-						scoringStart=false;
-						modelStart=false;
+//						scoringStart=false;
+//						modelStart=false;
 					}else
 					{
 						lblStarting.setText("Stopping");				
 						label.setText("Stopping");
-						btnStartCMS.setText("Start");
+						btnStartCMS.setText("Connect");
 						btnStartScoring.setText("Start");
 						btnStartModel.setText("Start");
-						scoringStart=true;
-						modelStart=true;
-						cmsClient.stopAll();
+//						scoringStart=true;
+//						modelStart=true;
+						btnStartModel.setVisible(false);
+						btnStartScoring.setVisible(false);
+						//cmsClient.stopAll();
 					}
 					} catch (MalformedURLException e1) {
 						// TODO Auto-generated catch block
@@ -192,8 +208,8 @@ public class GUI {
 				
 			}
 		});
-		btnStartCMS.setBounds(335, 27, 75, 25);
-		btnStartCMS.setText("Start");
+		btnStartCMS.setBounds(350, 27, 75, 25);
+		btnStartCMS.setText("Connect");
 		
 		
 	}
