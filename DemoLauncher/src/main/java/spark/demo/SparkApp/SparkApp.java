@@ -18,11 +18,21 @@ public class SparkApp {
 	
 	static String FILE_PATH ="hdfs://hadoop01:8020/samples/input/pg1661.txt";
 	static String SERVER_URL="//localhost/LaucherServer";
-	public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException 
+	public static void main(String[] args) throws  RemoteException, NotBoundException 
 	{
 		System.out.println("Hello");
 		
-		ILauncherServer srv = (ILauncherServer) Naming.lookup(SERVER_URL);
+		ILauncherServer srv;
+		try 
+		{
+			srv = (ILauncherServer) Naming.lookup(SERVER_URL);
+		} 
+		catch (MalformedURLException e) 
+		{
+			System.out.println("Connect to server failed.");
+			System.out.println("Stop Spark App.");
+			return;
+		}
 		System.out.println("From Server: "+srv.ping("Spark App was started!"));
 		
 		

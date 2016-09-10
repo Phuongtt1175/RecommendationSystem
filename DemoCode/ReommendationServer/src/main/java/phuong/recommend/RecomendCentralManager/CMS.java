@@ -1,13 +1,17 @@
 package phuong.recommend.RecomendCentralManager;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.spark.launcher.SparkAppHandle;
 import org.apache.spark.launcher.SparkLauncher;
@@ -29,6 +33,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 	//SPARK CONFIG
 	static final String SPARK_MASTER="local[2]";
+	static final String SPARK_APP_JAR="/home/hduser/docs/DemoLauncher-0.0.1-SNAPSHOT.jar";
 
 
 
@@ -36,6 +41,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 	static Registry RMIRegistry;
 	static String RMIName="CMS";
 	static String LOCAL_IP="192.168.11.107";
+	static String CMS_URL = "//"+LOCAL_IP+"/"+RMIName;
 	static CMS CMSobj;
 	
 	//Services
@@ -64,10 +70,14 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
   	//					MAIN
   	//********************************************************
 	
-    public static void main( String[] args ) throws RemoteException, MalformedURLException
+    public static void main( String[] args ) throws RemoteException, MalformedURLException, UnknownHostException
     {
         System.out.println( "CMS is starting..." );
         
+        
+        InetAddress IP=InetAddress.getLocalHost();
+        LOCAL_IP = IP.getHostAddress();
+        CMS_URL = "//"+LOCAL_IP+"/"+RMIName;
         
         //RMI Start
         try 
@@ -85,7 +95,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
         }
         
         CMSobj = new CMS();
-        Naming.rebind("//"+LOCAL_IP+"/"+RMIName, CMSobj);
+        Naming.rebind(CMS_URL, CMSobj);
         
     }
 
@@ -128,18 +138,21 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 	public void startModelBuilder() throws RemoteException 
 	{
-		try 
-		{
-			SparkAppHandle handle = new SparkLauncher()
-			         .setAppResource("/my/app.jar")
-			         .setMainClass("my.spark.app.Main")
-			         .setMaster(SPARK_MASTER)
-			         .setConf(SparkLauncher.DRIVER_MEMORY, "1g")
-			         .startApplication();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//Prepare submit commmand
+		List<String> cm= new ArrayList<String>();
+		cm.add("./spark-submit");
+		cm.add("--class");
+		cm.add("phuong.recommend.ModelBuilder.ModelBuilderService");
+		cm.add("--master");
+		cm.add(SPARK_MASTER);
+		cm.add(SPARK_APP_JAR);
+		cm.add(CMS_URL);
+				
+		boolean rs = Lib.startSparkApp(cm);
+		if(rs)
+			System.out.println("ScoringService was started!");
+		else
+			System.out.println("Cannot Start Scoring Service!");
 		
 	}
 
@@ -149,21 +162,21 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 	public void startScoringService() throws RemoteException 
 	{
+		//Prepare submit commmand
+		List<String> cm= new ArrayList<String>();
+		cm.add("./spark-submit");
+		cm.add("--class");
+		cm.add("phuong.recommend.Scoring.ScoringService");
+		cm.add("--master");
+		cm.add(SPARK_MASTER);
+		cm.add(SPARK_APP_JAR);
+		cm.add(CMS_URL);
 		
-		//Start
-		try 
-		{
-			SparkAppHandle handle = new SparkLauncher()
-			         .setAppResource("/my/app.jar")
-			         .setMainClass("my.spark.app.Main")
-			         .setMaster(SPARK_MASTER)
-			         .setConf(SparkLauncher.DRIVER_MEMORY, "1g")
-			         .startApplication();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		boolean rs = Lib.startSparkApp(cm);
+		if(rs)
+			System.out.println("ScoringService was started!");
+		else
+			System.out.println("Cannot Start Scoring Service!");
 	}
 
 
