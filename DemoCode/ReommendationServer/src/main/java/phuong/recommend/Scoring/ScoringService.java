@@ -33,7 +33,7 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
     
     
     //Parent
-    private static String CMS_URL ="//localhost/CMS";
+    private static String CMS_URL ="";//localhost/CMS";
     private static ICMSComponent CMSobj=null;
     
     
@@ -65,6 +65,7 @@ public class ScoringService extends UnicastRemoteObject implements IScoringAPI,I
 	//********************************************************
 	public static void main( String[] args ) throws RemoteException, UnknownHostException
     {
+		CMS_URL = args[0].toString();
         System.out.println( "Hello World!" );
         
         //***************************************************

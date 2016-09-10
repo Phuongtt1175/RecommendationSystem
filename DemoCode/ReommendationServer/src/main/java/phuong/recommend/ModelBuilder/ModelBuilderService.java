@@ -56,7 +56,7 @@ public class ModelBuilderService extends UnicastRemoteObject implements IModelBu
     private static String CURRENT_MODEL="hdfs://master:8020/associtaionRule/20160202/";
     
     //Parent
-    private static String CMS_URL ="//localhost/CMS";
+    private static String CMS_URL ="";
     private static ICMSComponent CMSobj=null;
     
     
@@ -105,6 +105,7 @@ public class ModelBuilderService extends UnicastRemoteObject implements IModelBu
   	//********************************************************
 	public static void main( String[] args ) throws UnknownHostException, RemoteException
     {
+		CMS_URL = args[0].toString();
         System.out.println( "Hello World!" );
         conf = new SparkConf().setMaster("local").setAppName("ModelBuilder");
      	sc = new JavaSparkContext(conf);
