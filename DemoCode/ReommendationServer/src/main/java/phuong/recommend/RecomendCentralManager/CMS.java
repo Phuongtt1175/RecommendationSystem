@@ -13,7 +13,6 @@ import org.apache.spark.launcher.SparkAppHandle;
 import org.apache.spark.launcher.SparkLauncher;
 
 import phuong.recommend.ModelBuilder.IModelBuilderAPI;
-import phuong.recommend.Scoring.IScoringAPI;
 import phuong.recommend.Scoring.ISocringControl;
 
 /**
