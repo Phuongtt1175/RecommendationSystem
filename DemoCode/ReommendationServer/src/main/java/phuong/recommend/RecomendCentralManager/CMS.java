@@ -100,6 +100,8 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
         CMSobj = new CMS();
         Naming.rebind(CMS_URL, CMSobj);
         
+       
+        
     }
 
 
@@ -398,16 +400,20 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 
 
-	public String getScoringURL() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+	public String getScoringURL() throws RemoteException 
+	{
+		if(scoringObj==null)
+			return "<ScoringServie not running>";
+		return RMI_URL_Scoring;
 	}
 
 
 
-	public String getModelBuilderURL() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+	public String getModelBuilderURL() throws RemoteException 
+	{
+		if(modelBuilder==null)
+			return "<modelBuider not running>";
+		return RMI_URL_ModelBuilder;
 	}
 
 
