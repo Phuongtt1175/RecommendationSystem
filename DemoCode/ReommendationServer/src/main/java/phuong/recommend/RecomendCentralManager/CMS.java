@@ -14,9 +14,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.spark.launcher.SparkAppHandle;
-import org.apache.spark.launcher.SparkLauncher;
-
 import phuong.recommend.ModelBuilder.IModelBuilderAPI;
 import phuong.recommend.Scoring.IScoringAPI;
 import phuong.recommend.Scoring.ISocringControl;
@@ -34,8 +31,8 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 
 	//SPARK CONFIG
-	static final String SPARK_MASTER="local[2]";
-	static final String SPARK_APP_JAR="/home/hduser/docs/DemoLauncher-0.0.1-SNAPSHOT.jar";
+	static String SPARK_MASTER="local[2]";
+	static String SPARK_APP_JAR="/home/hduser/docs/ReommendationServer-0.0.1-SNAPSHOT.jar";
 
 
 
@@ -76,6 +73,9 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
     public static void main( String[] args ) throws RemoteException, MalformedURLException, UnknownHostException
     {
         System.out.println( "CMS is starting..." );
+        
+        SPARK_MASTER = args[0];
+        
         
         
         InetAddress IP=InetAddress.getLocalHost();
@@ -122,18 +122,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 	public void startDataStreaming() throws RemoteException 
 	{
-		try 
-		{
-			SparkAppHandle handle = new SparkLauncher()
-			         .setAppResource("/my/app.jar")
-			         .setMainClass("my.spark.app.Main")
-			         .setMaster(SPARK_MASTER)
-			         .setConf(SparkLauncher.DRIVER_MEMORY, "1g")
-			         .startApplication();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 	}
 
