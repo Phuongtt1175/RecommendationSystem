@@ -150,14 +150,24 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 		cm.add(SPARK_APP_JAR);
 		cm.add(CMS_URL);
 				
+		System.out.println("*************************************");
+		System.out.println("Submit as:");
+		System.out.println(cm.toString());
+		
+		
 		boolean rs = Lib.startSparkApp(cm);
 		if(rs)
 			System.out.println("ModelBuilder was started!");
 		else
 			System.out.println("Cannot Start Modelbuilder Service!");
 		
+		System.out.println("*************************************");
+		
 	}
 
+
+
+	
 
 
 
@@ -179,11 +189,18 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 		cm.add(SPARK_APP_JAR);
 		cm.add(CMS_URL);
 		
+		
+		System.out.println("*************************************");
+		System.out.println("Submit as:");
+		System.out.println(cm.toString());
+		
 		boolean rs = Lib.startSparkApp(cm);
 		if(rs)
 			System.out.println("ScoringService was started!");
 		else
 			System.out.println("Cannot Start Scoring Service!");
+		
+		System.out.println("*************************************");
 	}
 
 
