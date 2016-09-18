@@ -87,6 +87,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
         {
         	RMIRegistry = LocateRegistry.createRegistry(1099);
         	System.out.println("Create new RMI Registry at port 1099");
+        	
 		} 
         catch (RemoteException e) 
         {
@@ -100,6 +101,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
         CMSobj = new CMS();
         Naming.rebind(CMS_URL, CMSobj);
         
+        System.out.println("Start CMS at: " + CMS_URL);
        
         
     }
@@ -132,6 +134,8 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 	public void startModelBuilder() throws RemoteException 
 	{
+		System.out.println("Starting ModelBuilder...");
+		
 		//Prepare submit commmand
 		List<String> cm= new ArrayList<String>();
 		cm.add("./spark-submit");
@@ -160,6 +164,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 	public void startScoringService() throws RemoteException 
 	{
+		System.out.println("Starting Scoring Service...");
 		//Prepare submit commmand
 		List<String> cm= new ArrayList<String>();
 		cm.add("./spark-submit");
@@ -224,6 +229,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 	public boolean registryModelBuilder(String RMI_URL) throws RemoteException 
 	{
+		System.out.println("Model Builder registry at "+RMI_URL);
 		RMI_URL_ModelBuilder=RMI_URL;
 		try 
 		{
@@ -268,6 +274,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 
 	public boolean registryScoring(String RMI_URL) throws RemoteException 
 	{
+		System.out.println("ScoringService registry at "+RMI_URL);
 		RMI_URL_Scoring=RMI_URL;
 		try 
 		{
