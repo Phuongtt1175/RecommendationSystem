@@ -147,6 +147,7 @@ public class GUI {
 						lblScoringURL.setText("");
 						cmsClient.stopScoringService();
 					}
+					
 				} catch (RemoteException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -175,22 +176,31 @@ public class GUI {
 					if(cmsConnect){
 						btnStartModel.setVisible(true);
 						btnStartScoring.setVisible(true);
-						label.setText("Starting");
-						lblStarting.setText("Starting");
 						btnStartCMS.setText("Disconnect");
-						btnStartModel.setText("Stop");
-						btnStartScoring.setText("Stop");
-//						scoringStart=false;
-//						modelStart=false;
+						if(cmsClient.getScoringServiceStatus()==3){
+							lblStarting.setText("Starting");
+							btnStartScoring.setText("Stop");	
+							lblScoringURL.setText(cmsClient.getScoringURL());
+						}else
+						{
+							lblStarting.setText("Stopping");				
+							btnStartScoring.setText("Start");
+							lblScoringURL.setText("");
+						}
+						if(cmsClient.getModelBuilderStatus()==3){
+							label.setText("Starting");
+							btnStartModel.setText("Stop");	
+							lblModelBuilderURL.setText(cmsClient.getModelBuilderURL());
+						}else
+						{
+							label.setText("Stopping");				
+							btnStartModel.setText("Start");
+							lblModelBuilderURL.setText("");
+						}
 					}else
 					{
-						lblStarting.setText("Stopping");				
-						label.setText("Stopping");
+						
 						btnStartCMS.setText("Connect");
-						btnStartScoring.setText("Start");
-						btnStartModel.setText("Start");
-//						scoringStart=true;
-//						modelStart=true;
 						btnStartModel.setVisible(false);
 						btnStartScoring.setVisible(false);
 						//cmsClient.stopAll();
