@@ -1,0 +1,36 @@
+*********************************************************
+INSTALL MAVEN BIN
+
+1. Download maven bin: http://mirrors.viethosting.vn/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+2. Follow guide at: https://maven.apache.org/install.html
+	2.1 Add Environment Variable for JAVA_HOME
+		Ex: "C:\Program Files\Java\jdk1.8.0_91"
+	2.2 Add maven bin folder to PATH
+		Ex: "D:\IU\Thesis\IDE\apache-maven-3.3.9\bin"
+3. Test JAVA_HOME: on cmd type 'echo %JAVA_HOME%
+3. Test Maven bin: on cmd type mvn -version
+	If cmd show the version of mvn
+
+
+
+
+
+**********************************************************
+BUILD:
+---------
+
+1. Open CMD
+2. CD to project folder (folder contant pom.xml file)
+3. type 'mvn package'
+4. Check *.jar file in folder 'target' of project
+
+
+
+
+
+***********************************************************
+RUN SPARK APP (jar file was build in previous step)
+-----------
+
+1. on commandline of linux, cd to $SPARK_HOME/bin
+2. using spark-sumit to run application follow guide: http://spark.apache.org/docs/latest/submitting-applications.html
