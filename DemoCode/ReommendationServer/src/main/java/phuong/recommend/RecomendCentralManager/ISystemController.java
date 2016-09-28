@@ -27,10 +27,13 @@ public interface ISystemController extends Remote
 		public int getPredictiveEngineeStatus() throws RemoteException;
 		
 		
-		//Get component info
+		//Get component info 
 		public String getPredictiveEngineeRemoteURL() throws RemoteException;
 		public String getModelBuilderRemoteURL() throws RemoteException;
 		public String getStreamingRemoteURL() throws RemoteException;
+		
+		//control predictive enge
+		public void clearQueryCache() throws RemoteException;
 		
 		
 		
@@ -48,6 +51,5 @@ public interface ISystemController extends Remote
 		
 		
 		
-		//For webserver
-		public String Recommend(String currentArticle) throws RemoteException;
+		
 }
