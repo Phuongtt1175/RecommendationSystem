@@ -14,6 +14,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -63,7 +64,8 @@ public class ModelBuilderService extends UnicastRemoteObject implements IModelBu
     //RMICMS_URL
     private static String RMI_NAME= "ModelServices";
     private static String SERVER_URL="//localhost/ModelService";
-    
+    static Registry RMIRegistry;
+	static String RMIName="CMS";
     
     //INPUT
     private static String accessLogPath = "D:\\Xampp5.6\\apache\\logs\\access.log";
@@ -107,7 +109,7 @@ public class ModelBuilderService extends UnicastRemoteObject implements IModelBu
     {
 		CMS_URL = args[0].toString();
         System.out.println( "Hello World!" );
-        conf = new SparkConf().setMaster("local").setAppName("ModelBuilder");
+        conf = new SparkConf().setAppName("ModelBuilder");
      	sc = new JavaSparkContext(conf);
      	
      	
@@ -125,17 +127,35 @@ public class ModelBuilderService extends UnicastRemoteObject implements IModelBu
      	
      	try 
         {
-			LocateRegistry.createRegistry(1099);
-			ModelBuilderService svrObj = new ModelBuilderService();
-			System.out.println("java RMI registry created.");			
-			Naming.rebind(SERVER_URL, svrObj);
+     		RMIRegistry = LocateRegistry.createRegistry(1099);
+        	System.out.println("Create new RMI Registry at port 1099");
 			
-			System.out.println("RMI Interface was started");
+			
 			
 		} 
-        catch (RemoteException e) 			{e.printStackTrace();}
-        catch (MalformedURLException e)    	{e.printStackTrace();}
+        catch (RemoteException e) 			
+     	{
+        	try 
+	    	{
+				RMIRegistry = LocateRegistry.getRegistry(1099);
+			} catch (RemoteException e1) {e1.printStackTrace();	}
+        	System.out.println("Using current RMI Registry at port 1099");
+     	}
+      
         
+     	
+     	ModelBuilderService svrObj = new ModelBuilderService();
+		
+		try 
+		{
+			Naming.rebind(SERVER_URL, svrObj);
+			System.out.println("RMI Interface was started");
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
         
         //******************************************************
         //				Registry with CMS
@@ -148,7 +168,7 @@ public class ModelBuilderService extends UnicastRemoteObject implements IModelBu
         catch (NotBoundException e) {e.printStackTrace();}
         
         
-        CMSobj.registryScoring(SERVER_URL);
+        CMSobj.registryModelBuilder(SERVER_URL);
         
     }
 	

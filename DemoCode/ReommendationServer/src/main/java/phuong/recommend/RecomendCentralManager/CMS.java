@@ -146,7 +146,7 @@ public class CMS extends UnicastRemoteObject implements ICMSClient,ICMSComponent
 		cm.add("--executor-memory");
 		cm.add("1G");
 		cm.add("--total-executor-cores");
-		cm.add("2");
+		cm.add("1");
 		cm.add(SPARK_APP_JAR);
 		cm.add(CMS_URL);
 				

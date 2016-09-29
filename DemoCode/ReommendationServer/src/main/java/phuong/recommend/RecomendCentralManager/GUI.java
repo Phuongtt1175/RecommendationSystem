@@ -18,8 +18,8 @@ import phuong.recommend.Scoring.IScoringAPI;
 
 public class GUI {
 	protected Shell shell;
-	private Text text;
-	private Text text_1;
+	private Text tb_CMSServerIP;
+	private Text tb_port;
 	private boolean modelStart = false;
 	private boolean scoringStart = false;
 	private boolean cmsConnect = false;
@@ -65,15 +65,18 @@ public class GUI {
 		lblCmsServer.setBounds(44, 34, 63, 15);
 		lblCmsServer.setText("CMS Server:");
 		
-		text = new Text(shell, SWT.BORDER);
-		text.setBounds(113, 31, 76, 21);
+		tb_CMSServerIP = new Text(shell, SWT.BORDER);
+		tb_CMSServerIP.setBounds(113, 31, 76, 21);
+		tb_CMSServerIP.setText("192.168.184.135");
 		
 		Label lblPort = new Label(shell, SWT.NONE);
 		lblPort.setBounds(204, 34, 55, 15);
 		lblPort.setText("Port:");
 		
-		text_1 = new Text(shell, SWT.BORDER);
-		text_1.setBounds(236, 31, 76, 21);
+		tb_port = new Text(shell, SWT.BORDER);
+		tb_port.setBounds(236, 31, 76, 21);
+		tb_port.setText("CMS");
+		
 		final Label lblStarting = new Label(shell, SWT.NONE);
 		lblStarting.setBounds(134, 117, 55, 15);
 		lblStarting.setText("Starting");
@@ -92,19 +95,20 @@ public class GUI {
 		
 		final Label lblModelBuilderURL = new Label(shell, SWT.NONE);
 		lblModelBuilderURL.setBounds(320, 76, 150, 15);
-		lblModelBuilderURL.setText("");
+		lblModelBuilderURL.setText("?");
 		
 		
 		final Label lblScoringURL = new Label(shell, SWT.NONE);
 		lblScoringURL.setBounds(320, 110, 150, 15);
-		lblScoringURL.setText("");
+		lblScoringURL.setText("?");
 		
 		final Button btnStartModel = new Button(shell, SWT.NONE);
 		btnStartModel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {					
-					if(cmsClient.getModelBuilderStatus()==3){
+				try {				
+					System.out.println(cmsClient.checkConnection());
+					if(cmsClient.getModelBuilderStatus()!=3){
 						label.setText("Starting");
 						btnStartModel.setText("Stop");					
 						//modelStart=false;
@@ -155,6 +159,7 @@ public class GUI {
 		});
 		btnStartScoring.setText("Start");
 		btnStartScoring.setBounds(236, 107, 75, 25);
+		
 		btnStartModel.setVisible(false);
 		btnStartScoring.setVisible(false);
 		final Button btnStartCMS = new Button(shell, SWT.NONE);
@@ -162,7 +167,9 @@ public class GUI {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 									try {
-					ICMSClient cmsClient = (ICMSClient) Naming.lookup("//"+text.getText()+"/"+text_1.getText());
+										
+										
+					cmsClient = (ICMSClient) Naming.lookup("//"+tb_CMSServerIP.getText()+"/"+tb_port.getText());
 					
 				if(cmsConnect){
 
@@ -180,8 +187,7 @@ public class GUI {
 						btnStartCMS.setText("Disconnect");
 						btnStartModel.setText("Stop");
 						btnStartScoring.setText("Stop");
-//						scoringStart=false;
-//						modelStart=false;
+
 					}else
 					{
 						lblStarting.setText("Stopping");				
@@ -189,12 +195,13 @@ public class GUI {
 						btnStartCMS.setText("Connect");
 						btnStartScoring.setText("Start");
 						btnStartModel.setText("Start");
-//						scoringStart=true;
-//						modelStart=true;
+
 						btnStartModel.setVisible(false);
 						btnStartScoring.setVisible(false);
 						//cmsClient.stopAll();
 					}
+					
+					cmsClient.checkConnection();
 					} catch (MalformedURLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -205,6 +212,8 @@ public class GUI {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+									
+				
 				
 			}
 		});
